@@ -1,11 +1,11 @@
 # Joinhook #
 
-Contributors: emrikol
-Tags: webhook
-Donate link: http://wordpressfoundation.org/donate/
-Requires at least: 4.7.2
-Tested up to: 4.7.2
-License: GPL3
+* Contributors: emrikol
+* Tags: webhook
+* Donate link: http://wordpressfoundation.org/donate/
+* Requires at least: 4.7.2
+* Tested up to: 4.7.2
+* License: GPL3
 
 Creates a webhook endpoint to connect Join (Android App) to Sonarr
 
@@ -21,6 +21,6 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 
 ## Changelog ##
 
-# 1.0.0 #
+### 1.0.0 ###
 
 First Version
