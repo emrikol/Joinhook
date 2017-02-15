@@ -7,6 +7,7 @@
  * Author: Derrick Tennant
  * Author URI: https://emrikol.com/
  * License: GPL3
+ * GitHub Plugin URI: https://github.com/emrikol/Joinhook/
  */
 
 function joinhook_register_route() {
