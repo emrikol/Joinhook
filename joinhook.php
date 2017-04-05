@@ -3,7 +3,7 @@
  * Plugin Name: Joinhook
  * Plugin URI: https://github.com/emrikol/Joinhook
  * Description: Creates a webhook endpoint to connect Join (Android App) to Sonaar.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Derrick Tennant
  * Author URI: https://emrikol.com/
  * License: GPL3
@@ -26,7 +26,12 @@ function joinhook_rest_api_callback( WP_REST_Request $request ) {
 		wp_send_json_error( 'Join Device or Group ID not set!' );
 	}
 
+	if ( ! isset( $options['join_api_key'] ) || empty( $options['join_api_key'] ) ) {
+		wp_send_json_error( 'Join API Key not set!' );
+	}
+
 	$device_id = sanitize_key( $options['join_device_id'] );
+	$api_key = sanitize_key( $options['join_api_key'] );
 
 	if ( function_exists( 'jetpack_photon_url' ) ) {
 		$icon_url = jetpack_photon_url( $icon_url );
@@ -48,10 +53,11 @@ function joinhook_rest_api_callback( WP_REST_Request $request ) {
 	$title = $event_type . ': ' . $media_title;
 
 	$join_url = add_query_arg( array(
-		'title' => $title,
-		'icon' => esc_url_raw( $icon_url ),
-		'text' => $text,
-		'deviceId' => $device_id,
+		'title' => rawurlencode( $title ),
+		'icon' => rawurlencode( esc_url_raw( $icon_url ) ),
+		'text' => rawurlencode( $text ),
+		'deviceId' => rawurlencode( $device_id ),
+		'apikey' => rawurlencode( $api_key ),
 	), 'https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush' );
 
 	// Boom!
@@ -86,6 +92,14 @@ function joinhook_settings_init() {
 	);
 
 	add_settings_field(
+		'join_api_key',
+		esc_html__( 'Join API Key', 'joinhook' ),
+		'join_api_key_render',
+		'joinhook_settings_page',
+		'joinhook_settings'
+	);
+
+	add_settings_field(
 		'join_app_icon',
 		esc_html__( 'URL to use as a notification icon', 'joinhook' ),
 		'join_app_icon_render',
@@ -98,6 +112,13 @@ function joinhook_device_id_render() {
 	$options = get_option( 'joinhook_settings' );
 	?>
 	<input type='text' name='joinhook_settings[join_device_id]' value='<?php echo esc_attr( $options['join_device_id'] ); ?>'>
+	<?php
+}
+
+function join_api_key_render() {
+	$options = get_option( 'joinhook_settings' );
+	?>
+	<input type='text' name='joinhook_settings[join_api_key]' value='<?php echo esc_attr( $options['join_api_key'] ); ?>'>
 	<?php
 }
 
@@ -117,7 +138,7 @@ function joinhook_options_page() {
 	?>
 	<form action='options.php' method='post'>
 
-		<h2>joinhook</h2>
+		<h1>Joinhook</h1>
 
 		<?php
 		settings_fields( 'joinhook_settings_page' );

@@ -18,6 +18,10 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 
 == Changelog ==
 
+= 1.1.0 =
+
+* All Join API calls now require an API Key
+
 = 1.0.0 =
 
 First Version
